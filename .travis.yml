@@ -11,7 +11,7 @@ script:
 
 after_success:
   - docker build -t tomasbak/multi-client ./client
-  - docker build -t tomasbak/multi-nginx ./enginx
+  - docker build -t tomasbak/multi-nginx ./nginx
   - docker build -t tomasbak/multi-server ./server
   - docker build -t tomasbak/multi-worker ./worker
 # first we need to log in to the docker CLI
