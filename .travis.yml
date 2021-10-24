@@ -1,0 +1,23 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t tomasbak/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true tomasbak/react-test npm test
+
+after_success:
+  - docker build -t tomasbak/multi-client ./client
+  - docker build -t tomasbak/multi-nginx ./enginx
+  - docker build -t tomasbak/multi-server ./server
+  - docker build -t tomasbak/multi-worker ./worker
+# first we need to log in to the docker CLI
+  - echo "$docker_password" | docker login -u "$docker_id" --password-stdin
+#take images and push to docker hub
+  - docker push tomasbak/multi-client
+  - docker push tomasbak/multi-nginx
+  - docker push tomasbak/multi-server
+  - docker push tomasbak/multi-worker
